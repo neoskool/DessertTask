@@ -94,7 +94,7 @@ abstract class DessertTask : IDessertTask {
 
     override var tailRunnable: Runnable? = null
 
-    override val needCall: Boolean = false
+    override var needCall: Boolean = false
 
     /**
      * 是否只在主进程，默认是

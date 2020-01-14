@@ -151,7 +151,7 @@ class TaskFactory(private val builder: Builder) {
 
                 override val runOnMainThread: Boolean = taskConfig!!.runOnMainThread
 
-                override val needCall: Boolean = taskConfig!!.needCall
+                override var needCall: Boolean = taskConfig!!.needCall
 
                 override val onlyInMainProcess: Boolean = taskConfig!!.onlyInMainProcess
 

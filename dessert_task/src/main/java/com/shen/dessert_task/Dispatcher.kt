@@ -144,7 +144,6 @@ class DessertDispatcher {
         if (this is TaskFactory.Companion.Builder.EasyCreateTask || this is TaskFactory.Companion.Builder.FactoryCreateTask) {
             val arrayDepend = dependedNameHashMap[this.methodName]
             arrayDepend?.forEach { it.satisfy() }
-            return
         }
 
         val arrayDepended = dependedHasMap[javaClass]
