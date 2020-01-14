@@ -8,18 +8,18 @@ import android.util.Log
  */
 class TaskImpl : ITask {
     override fun one() {
-        Log.d("one", "start: ${Thread.currentThread().name}")
+        Log.d("Wow One", "start: ${Thread.currentThread().name}")
     }
 
     override fun two() {
-        Log.d("two", "start: ${Thread.currentThread().name}")
+        Log.d("Wow Two", "start: ${Thread.currentThread().name}")
     }
 
     override fun three() {
-        Log.d("three", "start: ${Thread.currentThread().name}")
+        Log.d("Wow Three", "start: ${Thread.currentThread().name}")
     }
 
     override fun threeCallback() {
-        Log.d("threeCallback", "start: ${Thread.currentThread().name}")
+        Log.d("Wow threeCallback", "start: ${Thread.currentThread().name}")
     }
 }

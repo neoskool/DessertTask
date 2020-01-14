@@ -2,6 +2,7 @@ package com.shen.dessert_task
 
 import android.os.Process
 import androidx.annotation.IntRange
+import com.shen.dessert_task.utils.DebugLog
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
@@ -33,7 +34,14 @@ abstract class DessertTask : IDessertTask {
     var isSend = false
 
 
-    private val depends by lazy { CountDownLatch(dependOn?.size ?: 0) }
+    private val depends by lazy {
+        CountDownLatch(dependOn.size + dependOnByName.size)
+    }
+
+    /**
+     * 当使用接口创建时会使用到
+     */
+    internal open val methodName: String = ""
 
     ///当前Task等待，让依赖的Task先执行
     fun waitToSatisfy() {
@@ -46,7 +54,9 @@ abstract class DessertTask : IDessertTask {
 
     ///依赖的Task执行完一个
     fun satisfy() {
+        DebugLog.logD("Pre task satisfy", depends.count)
         depends.countDown()
+        DebugLog.logD("After task satisfy", depends.count)
     }
 
     /**
@@ -74,6 +84,8 @@ abstract class DessertTask : IDessertTask {
      * 当前Task依赖的Task集合（需要等待被依赖的Task执行完毕才能执行自己），默认没有依赖
      */
     override val dependOn: MutableList<Class<out DessertTask>> = mutableListOf()
+
+    override val dependOnByName: MutableList<String> = mutableListOf()
 
     /**
      * 是否在主线程进行，默认不在
@@ -111,6 +123,8 @@ interface IDessertTask {
 
     ///依赖关系
     val dependOn: List<Class<out DessertTask>>?
+
+    val dependOnByName: List<String>?
 
     ///异步线程执行的 Task 是否需要在被调用 await 时进行等待，默认不需要
     val needWait: Boolean

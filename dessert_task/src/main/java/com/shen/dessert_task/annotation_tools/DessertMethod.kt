@@ -1,5 +1,6 @@
 package com.shen.dessert_task.annotation_tools
 
+import com.shen.dessert_task.DessertTask
 import java.lang.reflect.Method
 
 /**
@@ -16,7 +17,9 @@ abstract class DessertMethod <T> (val taskFactory: TaskFactory) {
         }
     }
 
-    abstract fun addDependOn(tasksMethod: List<DessertMethod<*>>)
+    abstract fun addDependOn(allTask: MutableList<DessertTask>)
+
+    abstract fun addDependOnByName(tasksMethod: List<DessertMethod<*>>)
 
     abstract fun addTailRunnable(tasksMethod: List<DessertMethod<*>>)
 

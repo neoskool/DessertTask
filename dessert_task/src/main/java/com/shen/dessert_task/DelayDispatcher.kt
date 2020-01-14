@@ -38,7 +38,7 @@ class DelayDessertDispatcher {
 
     fun start() {
         if (interfaceCreate) {
-            AnnotationConvertTools.instance.autoAdd()
+            AnnotationConvertTools.instance.autoAdd(delayTasks.toMutableList())
         }
 
         Looper.myQueue().addIdleHandler(idleHandler)

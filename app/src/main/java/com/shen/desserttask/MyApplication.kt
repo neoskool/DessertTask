@@ -4,10 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.shen.dessert_task.DessertDispatcher
 import com.shen.dessert_task.easyTask
-import com.shen.desserttask.task.ITask
-import com.shen.desserttask.task.TaskImpl
-import com.shen.desserttask.task.TaskOne
-import com.shen.desserttask.task.TaskTwo
+import com.shen.desserttask.task.*
 
 class MyApplication : Application() {
 
@@ -25,6 +22,7 @@ class MyApplication : Application() {
 //        DessertDispatcher.getInstance()
 //            .addTask(TaskOne())
 //            .addTask(TaskTwo())
+//            .addTask(TaskThree())
 //            .start()
 
         //Method 3

@@ -17,20 +17,28 @@ fun getTaskHigh() = newTaskHigh
 @Synchronized
 fun getSortResult(
     originTask: List<DessertTask>,
-    clsLaunchTask: List<Class<out DessertTask>>
+    clsLaunchTask: List<Class<out DessertTask>>,
+    clsLaunchTaskByName: List<String>
 ): List<DessertTask> {
     val makeTime = System.currentTimeMillis()
 
     val dependSet: MutableSet<Int> = mutableSetOf()
     val graph = Graph(originTask.size)
     originTask.forEachIndexed { index, dessertTask ->
-        if (dessertTask.isSend or dessertTask.dependOn.isNullOrEmpty()) {
+        if (dessertTask.isSend || (dessertTask.dependOn.isNullOrEmpty() && dessertTask.dependOnByName.isNullOrEmpty())) {
             return@forEachIndexed
         }
 
         dessertTask.dependOn.forEach {
             val indexOfDepend = getIndexOfTask(originTask, clsLaunchTask, it)
             check(indexOfDepend >= 0) { " depends on ${it.simpleName} can not be found in task list at $indexOfDepend" }
+            dependSet.add(indexOfDepend)
+            graph.addEdge(indexOfDepend, index)
+        }
+
+        dessertTask.dependOnByName.forEach {
+            val indexOfDepend = getIndexOfTask(originTask, clsLaunchTaskByName, it)
+            check(indexOfDepend >= 0) { " depends on $it can not be found in task list at $indexOfDepend" }
             dependSet.add(indexOfDepend)
             graph.addEdge(indexOfDepend, index)
         }
@@ -86,8 +94,26 @@ private fun getIndexOfTask(
     if (index >= 0) return index
 
     originTask.forEachIndexed { position, dessertTask ->
-        if (cls.simpleName == dessertTask.javaClass.simpleName)
+        if (cls.simpleName == dessertTask.javaClass.simpleName) {
             return position
+        }
+    }
+
+    return index
+}
+
+private fun getIndexOfTask(
+    originTask: List<DessertTask>,
+    clsLaunchTask: List<String>,
+    methodName: String
+) : Int {
+    val index = clsLaunchTask.indexOf(methodName)
+    if (index >= 0) return index
+
+    originTask.forEachIndexed { position, dessertTask ->
+        if (methodName == dessertTask.methodName || methodName == dessertTask::class.java.simpleName) {
+            return position
+        }
     }
 
     return index

@@ -1,11 +1,13 @@
 package com.shen.dessert_task.annotation_tools
 
+import android.util.Log
 import com.shen.dessert_task.DessertTask
 import com.shen.dessert_task.annotation.*
 import com.shen.dessert_task.easyTask
 import com.shen.dessert_task.getCPUExecute
 import com.shen.dessert_task.getIOExecute
 import java.lang.reflect.Method
+import java.util.*
 import java.util.concurrent.ExecutorService
 
 class TaskFactory(private val builder: Builder) {
@@ -48,6 +50,8 @@ class TaskFactory(private val builder: Builder) {
             internal var tailRunnableName: String = ""
             internal var targetCallbackName: String = ""
 
+            private var taskConfig: TaskConfig? = null
+
 
             fun build(): TaskFactory {
                 methodAnnotations.forEach {
@@ -77,20 +81,18 @@ class TaskFactory(private val builder: Builder) {
             }
 
             private fun parseTaskAnnotation() {
-                var taskConfig: TaskConfig? = null
-                method.annotations.forEach {
-                    if (it is TaskConfig) {
-                        taskConfig = it
-                        return@forEach
+
+                for (annotation in method.annotations) {
+                    if (annotation is TaskConfig) {
+                        taskConfig = annotation
+                        break
                     }
                 }
 
                 val dessertTask = if (taskConfig == null) {
-                    easyTask {
-                        invokeMethod()
-                    }
+                    EasyCreateTask()
                 } else {
-                    initConfig(taskConfig!!)
+                    FactoryCreateTask()
                 }
 
                 methodTask = dessertTask
@@ -125,21 +127,33 @@ class TaskFactory(private val builder: Builder) {
                 }
             }
 
-            private fun initConfig(taskConfig: TaskConfig) = object : DessertTask() {
+            internal inner class EasyCreateTask : DessertTask() {
+                override val methodName: String
+                    get() = this@Builder.method.name
 
-                override fun needRunAsSoon(): Boolean = taskConfig.needRunAsSoon
+                override fun run() {
+                    invokeMethod()
+                }
+            }
 
-                override fun priority(): Int = taskConfig.priority
+            internal inner class FactoryCreateTask : DessertTask() {
 
-                override val runOn: ExecutorService = if (taskConfig.runOnExecute == Executors.IO) getIOExecute() else getCPUExecute()
+                override val methodName: String
+                    get() = this@Builder.method.name
 
-                override val needWait: Boolean = taskConfig.needWait
+                override fun needRunAsSoon(): Boolean = taskConfig!!.needRunAsSoon
 
-                override val runOnMainThread: Boolean = taskConfig.runOnMainThread
+                override fun priority(): Int = taskConfig!!.priority
 
-                override val needCall: Boolean = taskConfig.needCall
+                override val runOn: ExecutorService = if (taskConfig!!.runOnExecute == Executors.IO) getIOExecute() else getCPUExecute()
 
-                override val onlyInMainProcess: Boolean = taskConfig.onlyInMainProcess
+                override val needWait: Boolean = taskConfig!!.needWait
+
+                override val runOnMainThread: Boolean = taskConfig!!.runOnMainThread
+
+                override val needCall: Boolean = taskConfig!!.needCall
+
+                override val onlyInMainProcess: Boolean = taskConfig!!.onlyInMainProcess
 
                 override fun run() {
                     invokeMethod()

@@ -8,7 +8,10 @@ import com.shen.dessert_task.DessertTask
  *  @author shen
  */
 class TaskTwo : DessertTask() {
+    override val dependOn: MutableList<Class<out DessertTask>>
+        get() = mutableListOf(TaskOne::class.java, TaskThree::class.java)
+
     override fun run() {
-        Log.d("two", "start: ${Thread.currentThread().name}")
+        Log.d("Wow two", "start: ${Thread.currentThread().name}")
     }
 }

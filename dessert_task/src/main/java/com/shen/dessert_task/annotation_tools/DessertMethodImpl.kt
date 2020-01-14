@@ -1,12 +1,36 @@
 package com.shen.dessert_task.annotation_tools
 
+import com.shen.dessert_task.DessertTask
+
 /**
  *  created by shen
  *  at 2020.2020/1/2.10:08
  *  @author shen
  */
 class DessertMethodImpl <T> (taskFactory: TaskFactory) : DessertMethod <T> (taskFactory) {
-    override fun addDependOn(tasksMethod: List<DessertMethod<*>>) {
+
+    override fun addDependOn(allTask: MutableList<DessertTask>) {
+        if (taskFactory.type != TaskFactory.Companion.Builder.FactoryType.TASK) {
+            return
+        }
+
+        if (taskFactory.task == null || taskFactory.taskConfig == null) {
+            return
+        }
+
+        if (taskFactory.taskConfig!!.dependOn.isEmpty()) {
+            return
+        }
+
+        allTask.forEach {
+            if (taskFactory.taskConfig!!.dependOn.contains(it::class.java.simpleName)) {
+                taskFactory.task!!.dependOn.add(it::class.java)
+            }
+        }
+    }
+
+
+    override fun addDependOnByName(tasksMethod: List<DessertMethod<*>>) {
         if (taskFactory.type != TaskFactory.Companion.Builder.FactoryType.TASK) {
             return
         }
@@ -22,11 +46,10 @@ class DessertMethodImpl <T> (taskFactory: TaskFactory) : DessertMethod <T> (task
         tasksMethod.forEach {
             if (it.taskFactory.task != null && it.taskFactory.taskConfig != null) {
                 if (taskFactory.taskConfig!!.dependOn.contains(it.taskFactory.taskConfig?.methodName)) {
-                    taskFactory.task!!.dependOn.add(it.taskFactory.task!!.javaClass)
+                    taskFactory.task!!.dependOnByName.add(it.taskFactory.task!!.methodName)
                 }
             }
         }
-
     }
 
     override fun addTailRunnable(tasksMethod: List<DessertMethod<*>>) {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Looper
 import androidx.annotation.UiThread
 import com.shen.dessert_task.annotation_tools.AnnotationConvertTools
+import com.shen.dessert_task.annotation_tools.TaskFactory
 import com.shen.dessert_task.ext.isMainProcess
 import com.shen.dessert_task.sort.getSortResult
 import com.shen.dessert_task.state.markTaskDone
@@ -14,6 +15,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.collections.ArrayList
 
 /**
  * created by shen on 2019/10/24
@@ -28,6 +30,8 @@ class DessertDispatcher {
     private var allTasks = mutableListOf<DessertTask>()
 
     private val dependOnTasks by lazy { mutableListOf<Class<out DessertTask>>() }
+
+    private val dependOnTasksByName by lazy { mutableListOf<String>() }
 
     @Volatile
     private var mainThreadTask: MutableList<DessertTask> = mutableListOf()
@@ -45,6 +49,8 @@ class DessertDispatcher {
 
     private val dependedHasMap by lazy { hashMapOf<Class<out DessertTask>?, ArrayList<DessertTask>>() }
 
+    private val dependedNameHashMap by lazy { hashMapOf<String, ArrayList<DessertTask>>() }
+
     private var interfaceCreate: Boolean = false
 
     /**
@@ -56,7 +62,12 @@ class DessertDispatcher {
         task?.let {
             it.collectDepends()
             allTasks.add(it)
-            dependOnTasks.add(task.javaClass)
+
+            if (task is TaskFactory.Companion.Builder.EasyCreateTask || task is TaskFactory.Companion.Builder.FactoryCreateTask) {
+                dependOnTasksByName.add(task.methodName)
+            } else {
+                dependOnTasks.add(task.javaClass)
+            }
 
             it.ifNeedWait {
                 needWaitTasks.add(this)
@@ -83,7 +94,7 @@ class DessertDispatcher {
     @UiThread
     fun start() {
         if (interfaceCreate) {
-            AnnotationConvertTools.instance.autoAdd()
+            AnnotationConvertTools.instance.autoAdd(allTasks)
         }
 
         startTime = System.currentTimeMillis()
@@ -92,7 +103,7 @@ class DessertDispatcher {
         if (allTasks.isNotEmpty()) {
             analyseCount.getAndIncrement()
             printDependedMsg()
-            allTasks = getSortResult(allTasks, dependOnTasks) as MutableList<DessertTask>
+            allTasks = getSortResult(allTasks, dependOnTasks, dependOnTasksByName) as MutableList<DessertTask>
             countDownLatch = CountDownLatch(needWaitCount.get())
 
             sendAndExecuteAsyncTask()
@@ -130,10 +141,14 @@ class DessertDispatcher {
      * 通知Children一个前置任务已完成
      */
     fun DessertTask.satisfyChildren() {
-        val arrayDepended = dependedHasMap[javaClass]
-        arrayDepended?.forEach {
-            it.satisfy()
+        if (this is TaskFactory.Companion.Builder.EasyCreateTask || this is TaskFactory.Companion.Builder.FactoryCreateTask) {
+            val arrayDepend = dependedNameHashMap[this.methodName]
+            arrayDepend?.forEach { it.satisfy() }
+            return
         }
+
+        val arrayDepended = dependedHasMap[javaClass]
+        arrayDepended?.forEach { it.satisfy() }
     }
 
     fun DessertTask.executeTask() {
@@ -244,6 +259,22 @@ class DessertDispatcher {
                 if (finishTasks.contains(it)) satisfy()
             }
         }
+
+        if (!dependOnTasksByName.isNullOrEmpty()) {
+            dependOnByName.forEach {
+                if (dependedNameHashMap[it] == null) {
+                    dependedNameHashMap[it] = arrayListOf()
+                }
+
+                dependedNameHashMap[it]?.add(this)
+                for (finishTask in finishTasks) {
+                    if (finishTask.simpleName == it) {
+                        satisfy()
+                        break
+                    }
+                }
+            }
+        }
     }
 
     private fun DessertTask.ifNeedWait(action: DessertTask.() -> Unit) {
@@ -257,6 +288,13 @@ class DessertDispatcher {
         if (DebugLog.isDebug) {
             for ((key, value) in dependedHasMap) {
                 DebugLog.logD(key?.simpleName, "size -> ${value.size}")
+                value.forEach {
+                    DebugLog.logD("dessert task", it.javaClass.simpleName)
+                }
+            }
+
+            for ((key, value) in dependedNameHashMap) {
+                DebugLog.logD(key, "size -> ${value.size}")
                 value.forEach {
                     DebugLog.logD("dessert task", it.javaClass.simpleName)
                 }

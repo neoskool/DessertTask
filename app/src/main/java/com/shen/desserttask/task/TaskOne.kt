@@ -8,7 +8,9 @@ import com.shen.dessert_task.DessertTask
  *  @author shen
  */
 class TaskOne : DessertTask() {
+    override val dependOnByName: MutableList<String> = mutableListOf("one")
+
     override fun run() {
-        Log.d("one", "start: ${Thread.currentThread().name}")
+        Log.d("Wow One", "start: ${Thread.currentThread().name}")
     }
 }

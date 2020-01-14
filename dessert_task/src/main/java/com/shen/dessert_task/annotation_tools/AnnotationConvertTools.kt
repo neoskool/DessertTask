@@ -2,6 +2,7 @@ package com.shen.dessert_task.annotation_tools
 
 import com.shen.dessert_task.DelayDessertDispatcher
 import com.shen.dessert_task.DessertDispatcher
+import com.shen.dessert_task.DessertTask
 import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
 
@@ -65,17 +66,17 @@ class AnnotationConvertTools private constructor () {
         return serviceMethod!!
     }
 
-    internal fun autoAdd() {
+    internal fun autoAdd(allTask: MutableList<DessertTask>) {
         if (serviceMethodCache.isEmpty()) {
             return
         }
 
         serviceMethodCache.values.forEach {
-            invoke(it)
+            add(it, allTask)
         }
     }
 
-    private fun invoke(serviceMethod: DessertMethod<*>) {
+    private fun add(serviceMethod: DessertMethod<*>, allTask: MutableList<DessertTask>) {
         val cacheMethods = serviceMethodCache.values.toList()
 
         if (cacheMethods.isEmpty()) {
@@ -84,7 +85,8 @@ class AnnotationConvertTools private constructor () {
 
         serviceMethod.run {
             if (taskFactory.type == TaskFactory.Companion.Builder.FactoryType.TASK) {
-                addDependOn(cacheMethods)
+                addDependOn(allTask)
+                addDependOnByName(cacheMethods)
                 addTailRunnable(cacheMethods)
                 addCallback(cacheMethods)
 
