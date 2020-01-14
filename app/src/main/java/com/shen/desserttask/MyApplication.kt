@@ -25,6 +25,7 @@ class MyApplication : Application() {
 //        DessertDispatcher.getInstance()
 //            .addTask(TaskOne())
 //            .addTask(TaskTwo())
+//            .start()
 
         //Method 3
 //        DessertDispatcher.getInstance()
@@ -34,5 +35,6 @@ class MyApplication : Application() {
 //            .addTask(easyTask {
 //                Log.d("two", "start: ${Thread.currentThread().name}")
 //            })
+//            .start()
     }
 }
