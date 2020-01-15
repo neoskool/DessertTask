@@ -19,7 +19,7 @@ abstract class DessertMethod <T> (val taskFactory: TaskFactory) {
 
     abstract fun addDependOn(allTask: MutableList<DessertTask>)
 
-    abstract fun addDependOnByName(tasksMethod: List<DessertMethod<*>>)
+    abstract fun addDependOnByName(tasksMethod: List<DessertMethod<*>>, allTask: MutableList<DessertTask>)
 
     abstract fun addTailRunnable(tasksMethod: List<DessertMethod<*>>)
 

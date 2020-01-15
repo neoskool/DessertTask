@@ -30,7 +30,7 @@ class DessertMethodImpl <T> (taskFactory: TaskFactory) : DessertMethod <T> (task
     }
 
 
-    override fun addDependOnByName(tasksMethod: List<DessertMethod<*>>) {
+    override fun addDependOnByName(tasksMethod: List<DessertMethod<*>>, allTask: MutableList<DessertTask>) {
         if (taskFactory.type != TaskFactory.Companion.Builder.FactoryType.TASK) {
             return
         }
@@ -48,6 +48,12 @@ class DessertMethodImpl <T> (taskFactory: TaskFactory) : DessertMethod <T> (task
                 if (taskFactory.taskConfig!!.dependOn.contains(it.taskFactory.taskConfig?.methodName)) {
                     taskFactory.task!!.dependOnByName.add(it.taskFactory.task!!.methodName)
                 }
+            }
+        }
+
+        allTask.forEach {
+            if (taskFactory.taskConfig!!.dependOn.contains(it::class.java.simpleName)) {
+                taskFactory.task!!.dependOn.add(it::class.java)
             }
         }
     }

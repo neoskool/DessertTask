@@ -13,7 +13,7 @@ interface ITask {
     fun one()
 
     @Task
-    @TaskConfig(dependOn = ["one", "three"])
+    @TaskConfig(dependOn = ["one", "three", "TaskOne"])
     fun two()
 
     @Task

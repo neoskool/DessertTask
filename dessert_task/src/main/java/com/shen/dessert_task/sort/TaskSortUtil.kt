@@ -17,8 +17,7 @@ fun getTaskHigh() = newTaskHigh
 @Synchronized
 fun getSortResult(
     originTask: List<DessertTask>,
-    clsLaunchTask: List<Class<out DessertTask>>,
-    clsLaunchTaskByName: List<String>
+    clsLaunchTask: List<Class<out DessertTask>>
 ): List<DessertTask> {
     val makeTime = System.currentTimeMillis()
 
@@ -37,7 +36,7 @@ fun getSortResult(
         }
 
         dessertTask.dependOnByName.forEach {
-            val indexOfDepend = getIndexOfTask(originTask, clsLaunchTaskByName, it)
+            val indexOfDepend = getIndexOfTask(originTask, it) ?: return@forEach
             check(indexOfDepend >= 0) { " depends on $it can not be found in task list at $indexOfDepend" }
             dependSet.add(indexOfDepend)
             graph.addEdge(indexOfDepend, index)
@@ -104,19 +103,15 @@ private fun getIndexOfTask(
 
 private fun getIndexOfTask(
     originTask: List<DessertTask>,
-    clsLaunchTask: List<String>,
     methodName: String
-) : Int {
-    val index = clsLaunchTask.indexOf(methodName)
-    if (index >= 0) return index
-
+) : Int? {
     originTask.forEachIndexed { position, dessertTask ->
         if (methodName == dessertTask.methodName || methodName == dessertTask::class.java.simpleName) {
             return position
         }
     }
 
-    return index
+    return null
 }
 
 private fun List<DessertTask>.printAllTaskName() {

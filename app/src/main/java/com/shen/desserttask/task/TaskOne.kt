@@ -11,6 +11,6 @@ class TaskOne : DessertTask() {
     override val dependOnByName: MutableList<String> = mutableListOf("one")
 
     override fun run() {
-        Log.d("Wow One", "start: ${Thread.currentThread().name}")
+        Log.d("Special wow One", "start: ${Thread.currentThread().name}")
     }
 }

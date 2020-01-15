@@ -16,6 +16,7 @@ class MyApplication : Application() {
         //Method 1
         DessertDispatcher.getInstance()
             .create(ITask::class.java, TaskImpl())
+            .addTask(TaskOne())
             .start()
 
         //Method 2

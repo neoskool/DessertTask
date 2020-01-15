@@ -56,7 +56,7 @@ class DessertDispatchRunnable : Runnable {
             task.isFinish = true
 
             dispatcher?.run {
-                DebugLog.logE("Satisfy Task", task.toString())
+                DebugLog.logE("Satisfy Task", task.toString() + " ${task.methodName}")
                 task.satisfyChildren()
                 task.makeTaskDone()
             }

@@ -10,7 +10,6 @@ import com.shen.dessert_task.sort.getSortResult
 import com.shen.dessert_task.state.markTaskDone
 import com.shen.dessert_task.utils.DebugLog
 import java.lang.ref.WeakReference
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -103,7 +102,7 @@ class DessertDispatcher {
         if (allTasks.isNotEmpty()) {
             analyseCount.getAndIncrement()
             printDependedMsg()
-            allTasks = getSortResult(allTasks, dependOnTasks, dependOnTasksByName) as MutableList<DessertTask>
+            allTasks = getSortResult(allTasks, dependOnTasks) as MutableList<DessertTask>
             countDownLatch = CountDownLatch(needWaitCount.get())
 
             sendAndExecuteAsyncTask()
@@ -143,7 +142,9 @@ class DessertDispatcher {
     fun DessertTask.satisfyChildren() {
         if (this is TaskFactory.Companion.Builder.EasyCreateTask || this is TaskFactory.Companion.Builder.FactoryCreateTask) {
             val arrayDepend = dependedNameHashMap[this.methodName]
-            arrayDepend?.forEach { it.satisfy() }
+            arrayDepend?.forEach {
+                it.satisfy()
+            }
         }
 
         val arrayDepended = dependedHasMap[javaClass]
@@ -259,7 +260,7 @@ class DessertDispatcher {
             }
         }
 
-        if (!dependOnTasksByName.isNullOrEmpty()) {
+        if (!dependOnByName.isNullOrEmpty()) {
             dependOnByName.forEach {
                 if (dependedNameHashMap[it] == null) {
                     dependedNameHashMap[it] = arrayListOf()

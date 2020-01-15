@@ -86,7 +86,7 @@ class AnnotationConvertTools private constructor () {
         serviceMethod.run {
             if (taskFactory.type == TaskFactory.Companion.Builder.FactoryType.TASK) {
                 addDependOn(allTask)
-                addDependOnByName(cacheMethods)
+                addDependOnByName(cacheMethods, allTask)
                 addTailRunnable(cacheMethods)
                 addCallback(cacheMethods)
 
