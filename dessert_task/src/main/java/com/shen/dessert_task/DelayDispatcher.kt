@@ -30,7 +30,7 @@ class DelayDessertDispatcher {
         return this
     }
 
-    inline fun <reified T> create(interfaceObj : Class<T>, interfaceImpl: T, autoInvoke: Boolean = true) = AnnotationConvertTools.instance
+    inline fun <reified T> create(interfaceObj : Class<T>, interfaceImpl: T) = AnnotationConvertTools.instance
         .dispatcher(this)
         .create(interfaceObj, interfaceImpl).also {
             this.interfaceCreate = true

@@ -1,6 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -23,6 +28,15 @@ android {
         }
     }
 
+}
+
+publish {
+    userOrg = 'zuiren'
+    groupId = 'com.shen.DessertTask'
+    artifactId = 'DessertTask'
+    publishVersion = '0.1.0'
+    desc = 'easy start task in application in different threads'
+    website = "https://github.com/flalaorg/DessertTask"
 }
 
 dependencies {

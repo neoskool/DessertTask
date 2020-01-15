@@ -49,7 +49,6 @@ class DessertDispatchRunnable : Runnable {
             task.needCall = false
         }
 
-
         if (!task.needCall || task.runOnMainThread) {
             printTaskLog(startTime, waitTime)
 
