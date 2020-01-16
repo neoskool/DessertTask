@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -36,4 +35,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
+
+project.ext {
+    mavDevelopers = ["ZuiRen" : "Shen"]
+    mavSiteUrl = "https://github.com/flalaorg/DessertTask"
+    mavGitUrl = mavSiteUrl + ".git"
+    mavProjectName = "DessertTask"
+    mavLibraryDescription = "easy start task in application in different threads"
 }
