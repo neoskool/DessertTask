@@ -45,7 +45,9 @@ class DessertDispatchRunnable : Runnable {
 
         if (task.needCall) {
             task.callback?.invoke()
-            DebugLog.logD(task.javaClass.simpleName, "Callback finish")
+            if (DebugLog.isDebug) {
+                DebugLog.logD(task.javaClass.simpleName, "Callback finish")
+            }
             task.needCall = false
         }
 
@@ -56,7 +58,9 @@ class DessertDispatchRunnable : Runnable {
             task.isFinish = true
 
             dispatcher?.run {
-                DebugLog.logE("Satisfy Task", task.toString() + " ${task.methodName}")
+                if (DebugLog.isDebug) {
+                    DebugLog.logE("Satisfy Task", task.toString() + " ${task.methodName}")
+                }
                 task.satisfyChildren()
                 task.makeTaskDone()
             }

@@ -139,7 +139,7 @@ class DessertDispatcher {
     /**
      * 通知Children一个前置任务已完成
      */
-    fun DessertTask.satisfyChildren() {
+    internal fun DessertTask.satisfyChildren() {
         if (this is TaskFactory.Companion.Builder.EasyCreateTask || this is TaskFactory.Companion.Builder.FactoryCreateTask) {
             val arrayDepend = dependedNameHashMap[this.methodName]
             arrayDepend?.forEach {
@@ -151,7 +151,7 @@ class DessertDispatcher {
         arrayDepended?.forEach { it.satisfy() }
     }
 
-    fun DessertTask.executeTask() {
+    internal fun DessertTask.executeTask() {
         ifNeedWait {
             needWaitCount.getAndIncrement()
         }
@@ -159,7 +159,7 @@ class DessertDispatcher {
         runOn.execute(DessertDispatchRunnable(this, this@DessertDispatcher))
     }
 
-    fun DessertTask.makeTaskDone() {
+    internal fun DessertTask.makeTaskDone() {
         ifNeedWait {
             finishTasks.add(javaClass)
             needWaitTasks.remove(this)
@@ -205,12 +205,24 @@ class DessertDispatcher {
         private var hasInit: Boolean = false
 
         @JvmStatic
-        fun init(context: Context?) {
+        fun init(context: Context?): Companion {
             context?.let {
                 contextWeakRef = WeakReference(it)
                 hasInit = true
                 isMainProcess = context.isMainProcess()
             }
+            return this
+        }
+
+        @JvmStatic
+        fun build(): DessertDispatcher {
+            return getInstance()
+        }
+
+        @JvmStatic
+        fun isDebug(isDebug: Boolean): Companion {
+            DebugLog.isDebug = isDebug
+            return this
         }
 
         @JvmStatic

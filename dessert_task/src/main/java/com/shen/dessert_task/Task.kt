@@ -54,9 +54,15 @@ abstract class DessertTask : IDessertTask {
 
     ///依赖的Task执行完一个
     fun satisfy() {
-        DebugLog.logD("Pre task satisfy", depends.count)
+        if (DebugLog.isDebug) {
+            DebugLog.logD("${if (methodName.isEmpty()) this.javaClass.simpleName else methodName} Pre task satisfy", depends.count)
+        }
+
         depends.countDown()
-        DebugLog.logD("After task satisfy", depends.count)
+
+        if (DebugLog.isDebug) {
+            DebugLog.logD("${if (methodName.isEmpty()) this.javaClass.simpleName else methodName} After task satisfy", depends.count)
+        }
     }
 
     /**

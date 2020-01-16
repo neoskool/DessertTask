@@ -12,12 +12,16 @@ class MyApplication : Application() {
         super.onCreate()
 
         DessertDispatcher.init(this)
-
-        //Method 1
-        DessertDispatcher.getInstance()
+            .build()
             .create(ITask::class.java, TaskImpl())
             .addTask(TaskOne())
             .start()
+
+        //Method 1
+//        DessertDispatcher.getInstance()
+//            .create(ITask::class.java, TaskImpl())
+//            .addTask(TaskOne())
+//            .start()
 
         //Method 2
 //        DessertDispatcher.getInstance()
