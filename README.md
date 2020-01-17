@@ -1,7 +1,7 @@
 # DessertTask
 easy start task in application in different threads
 
->Androidx [![](https://jitpack.io/v/flalaorg/DessertTask.svg)](https://jitpack.io/#flalaorg/DessertTask)
+>Androidx [![](https://jitpack.io/v/flalaorg/DessertTask.svg)](https://jitpack.io/#flalaorg/DessertTask)\n
 >Android-support [![](https://jitpack.io/v/flalaorg/DessertTask-Android.svg)](https://jitpack.io/#flalaorg/DessertTask-Android)
 
 ## implementation
