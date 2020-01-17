@@ -22,4 +22,8 @@ class TaskImpl : ITask {
     override fun threeCallback() {
         Log.d("Wow threeCallback", "start: ${Thread.currentThread().name}")
     }
+
+    override fun threeTailRunnable() {
+        Log.d("Wow threeTailRunnable", "start: ${Thread.currentThread().name}")
+    }
 }

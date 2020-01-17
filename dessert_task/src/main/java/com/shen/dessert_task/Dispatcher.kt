@@ -3,12 +3,14 @@ package com.shen.dessert_task
 import android.content.Context
 import android.os.Looper
 import androidx.annotation.UiThread
+import com.shen.dessert_task.annotation.Task
 import com.shen.dessert_task.annotation_tools.AnnotationConvertTools
 import com.shen.dessert_task.annotation_tools.TaskFactory
 import com.shen.dessert_task.ext.isMainProcess
 import com.shen.dessert_task.sort.getSortResult
 import com.shen.dessert_task.state.markTaskDone
 import com.shen.dessert_task.utils.DebugLog
+import java.lang.StringBuilder
 import java.lang.ref.WeakReference
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Future
@@ -103,6 +105,7 @@ class DessertDispatcher {
             analyseCount.getAndIncrement()
             printDependedMsg()
             allTasks = getSortResult(allTasks, dependOnTasks) as MutableList<DessertTask>
+            printSortResultMsg()
             countDownLatch = CountDownLatch(needWaitCount.get())
 
             sendAndExecuteAsyncTask()
@@ -312,6 +315,27 @@ class DessertDispatcher {
                 }
             }
         }
+    }
+
+    private fun printSortResultMsg() {
+        if (!DebugLog.isDebug) {
+            return
+        }
+
+        val sortResult = StringBuilder()
+        allTasks.forEachIndexed { index, it ->
+            if (index == 0) {
+                sortResult.append("{\n")
+            }
+
+            sortResult.append("ClassName: ${it.javaClass.run { if (simpleName.isEmpty()) "Unknown" else simpleName }}" +
+                    ", MethodName: ${it.methodName.run { if (isEmpty()) "Unknown" else this }} \n")
+
+            if (index == allTasks.lastIndex) {
+                sortResult.append("}")
+            }
+        }
+        DebugLog.logD("SortTaskResult", sortResult.toString())
     }
 }
 

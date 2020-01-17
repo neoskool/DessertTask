@@ -1,5 +1,6 @@
 package com.shen.dessert_task
 
+import android.content.Context
 import android.os.Process
 import androidx.annotation.IntRange
 import com.shen.dessert_task.utils.DebugLog
@@ -54,15 +55,9 @@ abstract class DessertTask : IDessertTask {
 
     ///依赖的Task执行完一个
     fun satisfy() {
-        if (DebugLog.isDebug) {
-            DebugLog.logD("${if (methodName.isEmpty()) this.javaClass.simpleName else methodName} Pre task satisfy", depends.count)
-        }
-
+        DebugLog.logD("${if (methodName.isEmpty()) this.javaClass.simpleName else methodName} Pre task satisfy", depends.count)
         depends.countDown()
-
-        if (DebugLog.isDebug) {
-            DebugLog.logD("${if (methodName.isEmpty()) this.javaClass.simpleName else methodName} After task satisfy", depends.count)
-        }
+        DebugLog.logD("${if (methodName.isEmpty()) this.javaClass.simpleName else methodName} After task satisfy", depends.count)
     }
 
     /**
@@ -149,8 +144,10 @@ interface IDessertTask {
     val callback: (() -> Unit)?
 }
 
-fun easyTask(block: () -> Unit) = object : DessertTask() {
+fun easyTask(block: (context: Context?) -> Unit) = object : DessertTask() {
+    override val methodName: String = "easyTask"
+
     override fun run() {
-        block()
+        block(context)
     }
 }

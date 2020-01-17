@@ -15,6 +15,7 @@ class MyApplication : Application() {
             .build()
             .create(ITask::class.java, TaskImpl())
             .addTask(TaskOne())
+            .addTask(easyTask { Log.d("EasyTask wow", "Start: ${Thread.currentThread().name}") })
             .start()
 
         //Method 1
