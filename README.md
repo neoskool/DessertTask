@@ -8,4 +8,4 @@ easy start task in application in different threads
 
 ## implementation
 > AndroidX Please use `implementation 'com.github.flalaorg:DessertTask:$Version'` <br/>
-> Android-support Pleauser use `com.github.flalaorg:DessertTask-Android:$Version`
+> Android-support Pleauser use `implementation 'com.github.flalaorg:DessertTask-Android:$version'`
