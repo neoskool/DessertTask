@@ -11,13 +11,13 @@ easy start task in application in different threads
 > Android-support Please use `implementation 'com.github.flalaorg:DessertTask-Android:$version'`
 
 ## How to use
-+ How to initialize, we recommend the following <br/><br/>
++ How to initialize, we recommend the following <br/>
  ```kotlin
  DessertDispatcher.init(this)
  ```
  <br/>
  
-+ If you want to get an instance of it <br/><br/>
++ If you want to get an instance of it <br/>
 ```kotlin
 // Chained call
 DessertDispatcher.init(this)
@@ -49,7 +49,6 @@ addTask(easyTask {
     Log.d("EasyTask wow", "Start: ${Thread.currentThread().name}")       
 })
 ```
-<br/>
 + End you should use `start()` to Start Tasks
 + Sample
 ```kotlin
