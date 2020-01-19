@@ -19,8 +19,8 @@ annotation class TaskConfig(
     /**
      * Task priority, if invoke in MainThread don't modify
      */
-    @IntRange(from = Process.THREAD_PRIORITY_FOREGROUND.toLong(), to = Process.THREAD_PRIORITY_LOWEST.toLong())
-    val priority: Int = Process.THREAD_PRIORITY_BACKGROUND,
+    @Priorities
+    val priority: Int = Priorities.THREAD_PRIORITY_BACKGROUND,
 
     val needRunAsSoon: Boolean = false,
 

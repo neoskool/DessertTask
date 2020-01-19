@@ -40,4 +40,5 @@ project.ext {
     mavGitUrl = mavSiteUrl + ".git"
     mavProjectName = "DessertTask"
     mavLibraryDescription = "easy start task in application in different threads"
+    mavPluginVersion = '1.0.3'
 }

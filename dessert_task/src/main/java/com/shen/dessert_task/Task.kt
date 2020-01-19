@@ -3,6 +3,7 @@ package com.shen.dessert_task
 import android.content.Context
 import android.os.Process
 import androidx.annotation.IntRange
+import com.shen.dessert_task.annotation.Priorities
 import com.shen.dessert_task.utils.DebugLog
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
@@ -112,7 +113,7 @@ abstract class MainTask : DessertTask() {
 interface IDessertTask {
 
     ///优先级范围, 可以根据 Task 重要程度和工作量指定；之后根据实际情况决定是否有必要放更大
-    @IntRange(from = Process.THREAD_PRIORITY_FOREGROUND.toLong(), to = Process.THREAD_PRIORITY_LOWEST.toLong())
+    @Priorities
     fun priority(): Int
 
     fun needRunAsSoon(): Boolean
