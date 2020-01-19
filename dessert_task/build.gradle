@@ -28,17 +28,16 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation "androidx.appcompat:appcompat:$androix_version"
 }
-
-apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
-
-project.ext {
-    mavDevelopers = ["ZuiRen" : "Shen"]
-    mavSiteUrl = "https://github.com/flalaorg/DessertTask"
-    mavGitUrl = mavSiteUrl + ".git"
-    mavProjectName = "DessertTask"
-    mavLibraryDescription = "easy start task in application in different threads"
-    mavPluginVersion = '1.0.3'
-}
+//
+//apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
+//
+//project.ext {
+//    mavDevelopers = ["ZuiRen" : "Shen"]
+//    mavSiteUrl = "https://github.com/flalaorg/DessertTask"
+//    mavGitUrl = mavSiteUrl + ".git"
+//    mavProjectName = "DessertTask"
+//    mavLibraryDescription = "easy start task in application in different threads"
+//    mavPluginVersion = '1.0.3'
+//}
