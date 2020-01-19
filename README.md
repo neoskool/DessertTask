@@ -1,4 +1,4 @@
-# DessertTask
+# DessertTask [中文点这里](https://github.com/flalaorg/DessertTask/blob/master/Documents/README-CN.md)
 easy start task in application in different threads
 
 ## Get It
