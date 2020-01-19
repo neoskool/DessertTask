@@ -67,7 +67,7 @@ DessertDispatcher.init(this)
 2. `needRunAsSoon` Meaning as its name
 3. `runOn` Task execution thread pool, can be specified, generally default
 4. `dependOn` Dependent Task
-5. `dependOnByName` The name of the dependent task, which can be the method name or the class name in the interface
+5. `dependOnByName` The name of the dependent task, which can be the method name or the class name
 6. `needWait` Whether the Task executed by the asynchronous thread needs to wait when await is called
 7. `runOnMainThread` Meaning as its name
 8. `onlyInMainProcess` Meaning as its name
