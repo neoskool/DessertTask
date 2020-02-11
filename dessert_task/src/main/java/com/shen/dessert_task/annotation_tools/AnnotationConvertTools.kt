@@ -14,10 +14,10 @@ import java.util.concurrent.ConcurrentHashMap
 
 class AnnotationConvertTools private constructor () {
 
-    companion object {
-        val instance by lazy { AnnotationConvertTools() }
+    internal companion object {
+        internal val instance by lazy { AnnotationConvertTools() }
 
-        fun <T> validateServiceInterface(service: Class<T>) {
+        private fun <T> validateServiceInterface(service: Class<T>) {
             require(service.isInterface) { "Task declarations must be interfaces." }
             require(service.interfaces.isEmpty()) { "Task interfaces must not extend other interfaces." }
         }
@@ -29,7 +29,7 @@ class AnnotationConvertTools private constructor () {
     internal lateinit var createCache: Any
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> create(taskObj: Class<T>, taskObjImpl: T) {
+    internal fun <T> create(taskObj: Class<T>, taskObjImpl: T) {
         validateServiceInterface(taskObj)
 
         taskObj.methods.forEach {
@@ -42,12 +42,12 @@ class AnnotationConvertTools private constructor () {
     }
 
 
-    fun dispatcher(dispatcher: DessertDispatcher): AnnotationConvertTools {
+    internal fun dispatcher(dispatcher: DessertDispatcher): AnnotationConvertTools {
         dispatcherNormal = dispatcher
         return this
     }
 
-    fun dispatcher(dispatcher: DelayDessertDispatcher): AnnotationConvertTools {
+    internal fun dispatcher(dispatcher: DelayDessertDispatcher): AnnotationConvertTools {
         dispatcherDelay = dispatcher
         return this
     }

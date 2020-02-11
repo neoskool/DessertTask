@@ -44,6 +44,8 @@ class DessertDispatcher {
 
     private val needWaitTasks by lazy { mutableListOf<DessertTask>() }
 
+    private val needCallTasks by lazy { mutableListOf<DessertTask>() }
+
     ///已经结束的 Task
     @Volatile
     private var finishTasks: ArrayList<Class<out DessertTask>> = ArrayList(100)
@@ -73,6 +75,10 @@ class DessertDispatcher {
             it.ifNeedWait {
                 needWaitTasks.add(this)
                 needWaitCount.getAndIncrement()
+            }
+
+            it.ifNeedCall {
+                needCallTasks.add(this)
             }
         }
 
@@ -139,6 +145,22 @@ class DessertDispatcher {
         }
     }
 
+    fun wakeAll() {
+        needCallTasks.forEach {
+            it.sendTaskReal()
+        }
+    }
+
+    fun wake(name: String) {
+        needCallTasks.filter { it.methodName == name }
+            .forEach { it.sendTaskReal() }
+    }
+
+    fun <T> wake(clazz: Class<T>) {
+        needCallTasks.filter { it.javaClass == clazz }
+            .forEach { it.sendTaskReal() }
+    }
+
     /**
      * 通知Children一个前置任务已完成
      */
@@ -187,6 +209,11 @@ class DessertDispatcher {
             if (it.onlyInMainProcess and !isMainProcess) {
                 it.makeTaskDone()
             } else{
+                //If it needCall skip it
+                if (it.needCall) {
+                    DebugLog.logD("ClassName: ${it.javaClass.simpleName} MethodName: ${it.methodName}", "needCall")
+                    return@forEach
+                }
                 it.sendTaskReal()
             }
 
@@ -294,6 +321,12 @@ class DessertDispatcher {
 
     private fun DessertTask.ifNeedWait(action: DessertTask.() -> Unit) {
         if (!runOnMainThread and needWait) {
+            action.invoke(this)
+        }
+    }
+
+    private fun DessertTask.ifNeedCall(action: DessertTask.() -> Unit) {
+        if (!runOnMainThread and needCall) {
             action.invoke(this)
         }
     }

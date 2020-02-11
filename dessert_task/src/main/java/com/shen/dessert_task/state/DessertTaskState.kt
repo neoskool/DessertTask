@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger
         setLaunchState()
     }
 
-private val stateDatas: MutableList<DessertTaskStateData> by lazy { mutableListOf<DessertTaskStateData>() }
+private val stateDates: MutableList<DessertTaskStateData> by lazy { mutableListOf<DessertTaskStateData>() }
 private var taskDoneCount = AtomicInteger()
 private var openLaunchState = false
 
@@ -27,7 +27,7 @@ fun markTaskDone() {
 
 fun setLaunchState() {
     val data = DessertTaskStateData(situation = currentSituation, count = taskDoneCount.get())
-    stateDatas.add(data)
+    stateDates.add(data)
     taskDoneCount = AtomicInteger(0)
 }
 

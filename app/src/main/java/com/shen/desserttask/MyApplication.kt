@@ -3,6 +3,8 @@ package com.shen.desserttask
 import android.app.Application
 import android.util.Log
 import com.shen.dessert_task.DessertDispatcher
+import com.shen.dessert_task.DessertTask
+import com.shen.dessert_task.annotation_tools.AnnotationConvertTools
 import com.shen.dessert_task.easyTask
 import com.shen.desserttask.task.*
 
@@ -19,8 +21,6 @@ class MyApplication : Application() {
                 Log.d("EasyTask wow", "Start: ${Thread.currentThread().name}")
             })
             .start()
-
-
 
         //Method 1
 //        DessertDispatcher.getInstance()
