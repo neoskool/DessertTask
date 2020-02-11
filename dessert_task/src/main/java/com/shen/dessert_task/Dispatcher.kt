@@ -146,19 +146,19 @@ class DessertDispatcher {
     }
 
     fun wakeAll() {
-        needCallTasks.forEach {
-            it.sendTaskReal()
-        }
+        needCallTasks.forEach { it.sendTaskRealByWake() }
     }
 
     fun wake(name: String) {
         needCallTasks.filter { it.methodName == name }
-            .forEach { it.sendTaskReal() }
+            .forEach { it.sendTaskRealByWake() }
     }
 
     fun <T> wake(clazz: Class<T>) {
         needCallTasks.filter { it.javaClass == clazz }
-            .forEach { it.sendTaskReal() }
+            .forEach {
+                it.sendTaskRealByWake()
+            }
     }
 
     /**
@@ -202,6 +202,14 @@ class DessertDispatcher {
         }
 
         DebugLog.logD("main task duration", System.currentTimeMillis() - startTime)
+    }
+
+    private fun DessertTask.sendTaskRealByWake() {
+        if (isSend) {
+            return
+        }
+        sendTaskReal()
+        isSend = true
     }
 
     private fun sendAndExecuteAsyncTask() {
